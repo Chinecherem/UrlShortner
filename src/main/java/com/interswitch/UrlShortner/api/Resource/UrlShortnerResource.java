@@ -30,7 +30,7 @@ public class UrlShortnerResource {
     }
 
     @RequestMapping(value="/{Id}", method = RequestMethod.GET)
-    public ResponseEntity getUrl(@PathVariable String Id, HttpServletResponse resp) throws IOException {
+    public ResponseEntity getUrl(@PathVariable String Id) {
         Response response = null;
             String Longurl = redisTemplate.opsForValue().get(Id);
             if (Longurl == null) {
@@ -47,7 +47,6 @@ public class UrlShortnerResource {
         System.out.println(Longurl);
         return new ResponseEntity<Response>(headers, HttpStatus.MOVED_PERMANENTLY);
 
-//        return response;
     }
 
     @PostMapping

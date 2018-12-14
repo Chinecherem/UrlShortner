@@ -50,15 +50,16 @@ public class UrlShortnerResource {
     }
 
     @PostMapping
-    public Response create(@RequestBody UrlModel url){
+    public String create(@RequestBody UrlModel url){
         Response response = null;
         String status = "Url Shortened";
         UrlValidator urlValidator = new UrlValidator(
                 new String[]{"http", "https"}
         );
+        String Id = null;
         try {
             if (urlValidator.isValid(url.getUrl())) {
-                String Id = Hashing.murmur3_32().hashString(url.getUrl(), StandardCharsets.UTF_8).toString();
+                Id = Hashing.murmur3_32().hashString(url.getUrl(), StandardCharsets.UTF_8).toString();
                 System.out.println("Generated Id: " + Id);
                 redisTemplate.opsForValue().set(Id, url.getUrl());
                 response = new UrlShortnerResponse("200", "Successfull", null, "http://localhost:8080/api/url/"+Id);
@@ -66,6 +67,6 @@ public class UrlShortnerResource {
         }catch (Exception e){
             status = e.getMessage();
         }
-        return response;
+        return "http://localhost:8080/api/url/"+Id;
     }
 }
